@@ -1,0 +1,13 @@
+{
+  "htmlinfo": "https://developer.mozilla.org/docs/Web/HTML", 
+  "cssinfo": "https://developer.mozilla.org/docs/Web/CSS", 
+  "jsinfo": "https://developer.mozilla.org/docs/Web/JavaScript", 
+  "regexinfo": "https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_expressions", 
+  "svginfo": "https://developer.mozilla.org/docs/Web/SVG", 
+  "windowsinfo": "https://en.wikipedia.org/wiki/Microsoft_Windows", 
+  "bashinfo": "https://www.gnu.org/software/bash/", 
+  "powershellinfo": "https://learn.microsoft.com/powershell/", 
+  "markrowninfo": "https://www.markdownguide.org/", 
+  "facebookicon": "https://adarshrkumar.github.io/adarshrkumar/icons/Facebook.svg",
+  "tiktokicon": "https://adarshrkumar.github.io/adarshrkumar/icons/TikTok.svg"
+}

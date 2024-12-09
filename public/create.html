@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortner at akum.site/public</title>
+  </head>
+  <body>
+    <h1>URL Shortner at akum.site/public</h1>
+    <form action="/addUrl" method="post" class="shorten-form">
+      <input type="text" name="a" placeholder="Enter Alias">
+      <input type="text" name="u" placeholder="Enter URL" required>
+      <input type="submit" value="Shorten">
+    </form>
+    <script>
+      var form = document.querySelector('.shorten-form')
+      form.addEventListener('submit', function(e) {
+        e.preventDefault()
+        var elements = form.elements
+        var a = elements['a'].value
+        var u = elements['u'].value
+        if (!a.startsWith('/')) a = `/${a}`
+        if (!u.includes('://')) u = `https://${u}`
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', `./addUrl?a=${a}&u=${u}`)
+        xhr.addEventListener('load', function() {
+          go(xhr, a, u)
+        })
+        xhr.send()
+      })
+
+      function go(e, a, u) {
+        var site = `${location.protocol}//${location.hostname}`
+        let p = document.createElement('p')
+        if (a.startsWith('/')) a = a.substring(1)
+        p.innerHTML = `${e.responseText}: <a href="${site}/p/${a}">/p/${a}</a> for <a href="${u}" target="_blank">${u}</a>`
+        document.body.appendChild(p)
+        cleanUpForm(form)
+      }
+
+      function cleanUpForm(f) {
+        var fElements = f.elements
+        fElements = [fElements['a'], fElements['u']]
+        fElements.forEach(function(fE, i) {
+          fE.value = ''
+        })
+      }
+    </script>
+  </body>
+  </html>
