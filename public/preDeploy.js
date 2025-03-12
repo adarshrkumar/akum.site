@@ -1,18 +1,23 @@
 var fName = 'data'
-var request = require('request');
-var fs = require('fs');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));var fs = require('fs');
+
+function parseJSON(response) {
+  let a;
+  try {
+    a = JSON.parse(response);
+  } catch (e) {
+    return '{}'
+  }
+  return a
+}
 
 preDeploy()
 function preDeploy() {
-  request.get(
-    {
-      url: `https://akum.site/public/${fName}.json`
-    }, 
-    function(error, response, body) {
-      body = body ? body : '{}'
-      fs.writeFileSync(`${__dirname}/${fName}.json`, body)
-    }
-  )
+  fetch(`https://akum.site/public/${fName}.json`)
+    .then(resp => resp.text())
+    .then(body => {
+      fs.writeFileSync(`${__dirname}/${fName}.json`, parseJSON(body) ?? '{}')
+    })
 }
 
 module.exports = preDeploy
