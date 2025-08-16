@@ -23,23 +23,21 @@
         if (!a.startsWith('/')) a = `/${a}`
         if (!u.includes('://')) u = `https://${u}`
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', `/addUrl?a=${a}&u=${u}`)
-        xhr.addEventListener('load', function() {
-          var req = new XMLHttpRequest()
-          req.open('GET', '/shortnerUrl')
-          req.addEventListener('load', function() {
-            go(xhr, a, u, this.responseText)
+        fetch(`/addUrl?a=${a}&u=${u}`, { method: 'POST' })
+          .then(response => response.text())
+          .then(text => {
+            fetch('/shortnerUrl')
+              .then(res => res.text())
+              .then(shortnerUrl => {
+                go(text, a, u, shortnerUrl)
+              })
           })
-          req.send()
-        })
-        xhr.send()
       })
 
-      function go(e, a, u, shortnerUrl) {
+      function go(text, a, u, shortnerUrl) {
         let p = document.createElement('p')
         if (a.startsWith('/')) a = a.substring(1)
-        p.innerHTML = `${e.responseText}: <a href="${shortnerUrl}/${a}">/${a}</a> for <a href="${u}" target="_blank">${u}</a>`
+        p.innerHTML = `${text}: <a href="${shortnerUrl}/${a}">/${a}</a> for <a href="${u}" target="_blank">${u}</a>`
         document.body.appendChild(p)
         cleanUpForm(form)
       }

@@ -4,8 +4,8 @@ const preDeploy = require('./public/preDeploy.js');
 const app = express();
 
 const hostPublic = require('./public/index.js')
-var site = 'https://adarshrkumar.dev'
-var shortnerUrl = 'https://akum.site'
+var site = process.env.SITE_URL || 'https://adarshrkumar.dev'
+var shortnerUrl = process.env.SHORTNER_URL || 'https://akum.site'
 
 app.get('/', function(req, res) {
   let h = req.hostname
