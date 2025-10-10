@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Shortner at akum.site</title>
-  </head>
-  <body>
-    <h1>URL Shortner at akum.site</h1>
-    <form action="/addUrl" method="post" class="shorten-form">  
-      <input type="text" name="a" placeholder="Enter Alias">
-      <input type="text" name="u" placeholder="Enter URL" required>
-      <input type="submit" value="Shorten">
-    </form>
-    <script>
-      var form = document.querySelector('.shorten-form')
-      form.addEventListener('submit', function(e) {
-        e.preventDefault()
-        var elements = form.elements
-        var a = elements['a'].value
-        var u = elements['u'].value
-        if (!a.startsWith('/')) a = `/${a}`
-        if (!u.includes('://')) u = `https://${u}`
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>URL Shortner at akum.site</title>
+    </head>
+    <body>
+        <h1>URL Shortner at akum.site</h1>
+        <form action="/addUrl" method="post" class="shorten-form">  
+            <input type="text" name="a" placeholder="Enter Alias">
+            <input type="text" name="u" placeholder="Enter URL" required>
+            <input type="submit" value="Shorten">
+        </form>
+        <script>
+            var form = document.querySelector('.shorten-form')
+            form.addEventListener('submit', function(e) {
+                e.preventDefault()
+                var elements = form.elements
+                var a = elements['a'].value
+                var u = elements['u'].value
+                if (!a.startsWith('/')) a = `/${a}`
+                if (!u.includes('://')) u = `https://${u}`
 
-        fetch(`/addUrl?a=${a}&u=${u}`, { method: 'POST' })
-          .then(response => response.text())
-          .then(text => {
-            fetch('/shortnerUrl')
-              .then(res => res.text())
-              .then(shortnerUrl => {
-                go(text, a, u, shortnerUrl)
-              })
-          })
-      })
+                fetch(`/addUrl?a=${a}&u=${u}`, { method: 'POST' })
+                    .then(response => response.text())
+                    .then(text => {
+                        fetch('/shortnerUrl')
+                            .then(res => res.text())
+                            .then(shortnerUrl => {
+                                go(text, a, u, shortnerUrl)
+                            })
+                    })
+            })
 
-      function go(text, a, u, shortnerUrl) {
-        let p = document.createElement('p')
-        if (a.startsWith('/')) a = a.substring(1)
-        p.innerHTML = `${text}: <a href="${shortnerUrl}/${a}">/${a}</a> for <a href="${u}" target="_blank">${u}</a>`
-        document.body.appendChild(p)
-        cleanUpForm(form)
-      }
+            function go(text, a, u, shortnerUrl) {
+                let p = document.createElement('p')
+                if (a.startsWith('/')) a = a.substring(1)
+                p.innerHTML = `${text}: <a href="${shortnerUrl}/${a}">/${a}</a> for <a href="${u}" target="_blank">${u}</a>`
+                document.body.appendChild(p)
+                cleanUpForm(form)
+            }
 
-      function cleanUpForm(f) {
-        var fElements = f.elements
-        fElements = [fElements['a'], fElements['u']]
-        fElements.forEach(function(fE, i) {
-          fE.value = ''
-        })
-      }
-    </script>
-  </body>
-  </html>
+            function cleanUpForm(f) {
+                var fElements = f.elements
+                fElements = [fElements['a'], fElements['u']]
+                fElements.forEach(function(fE, i) {
+                    fE.value = ''
+                })
+            }
+        </script>
+    </body>
+</html>
