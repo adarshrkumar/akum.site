@@ -16,7 +16,7 @@ function preDeploy() {
     fetch(`https://akum.site/public/${fName}.json`)
         .then(resp => resp.text())
         .then(body => {
-            fs.writeFileSync(`${__dirname}/${fName}.json`, parseJSON(body) ?? '{}')
+            fs.writeFileSync(`${__dirname}/${fName}.json`, JSON.stringify(parseJSON(body)) ?? '{}')
         })
 }
 
