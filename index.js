@@ -26,7 +26,15 @@ app.post('/addUrl', function(req, res) {
     var data = fs.readFileSync('data.json')
     if (!!JSON.parse(data) === false) data = '{}'
     data = JSON.parse(data)
-    data[req.query.a.toLowerCase()] = req.query.u
+    
+    // Decode URL parameters to handle encoded URLs
+    let alias = decodeURIComponent(req.query.a).toLowerCase()
+    const url = decodeURIComponent(req.query.u)
+    
+    // Ensure alias starts with /
+    if (!alias.startsWith('/')) alias = `/${alias}`
+    
+    data[alias] = url
     fs.writeFileSync('data.json', JSON.stringify(data))
 
     res.send('Succesfully created a short URL at')
@@ -43,6 +51,11 @@ app.get('/*', function(req, res) {
 
     var url = data[req.path.toLowerCase()]
     if (!!url && url !== null) {
+        // Preserve query parameters when redirecting
+        if (Object.keys(req.query).length > 0) {
+            const queryString = new URLSearchParams(req.query).toString()
+            url = `${url}${url.includes('?') ? '&' : '?'}${queryString}`
+        }
         res.redirect(url)
     }
     else {
@@ -52,6 +65,12 @@ app.get('/*', function(req, res) {
         }
         url = `${req.protocol}://${theSite}/${req.path}`
         if (url.includes('//')) url = url.split('//').join('/')
+        
+        // Preserve query parameters for fallback redirect
+        if (Object.keys(req.query).length > 0) {
+            const queryString = new URLSearchParams(req.query).toString()
+            url = `${url}${url.includes('?') ? '&' : '?'}${queryString}`
+        }
         res.redirect(url)
     }
 

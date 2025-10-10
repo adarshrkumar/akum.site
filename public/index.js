@@ -19,12 +19,20 @@ function hostPublic(app) {
         var data = fs.readFileSync(`${__dirname}/data.json`)
         if (!!JSON.parse(data) === false) data = '{}'
         data = JSON.parse(data)
+        
+        // Decode URL parameters to handle encoded URLs
+        let alias = decodeURIComponent(req.query.a).toLowerCase()
+        const url = decodeURIComponent(req.query.u)
+        
+        // Ensure alias starts with /
+        if (!alias.startsWith('/')) alias = `/${alias}`
+        
         var message = 'Succesfully created a short URL at'
-        if (!!data[req.query.a.toLowerCase()]) {
+        if (!!data[alias]) {
             message = 'URL already exists at'
         }
         else {
-            data[req.query.a.toLowerCase()] = req.query.u
+            data[alias] = url
         }
         fs.writeFileSync(`${__dirname}/data.json`, JSON.stringify(data))
 
@@ -44,6 +52,11 @@ function hostPublic(app) {
         }
         var url = data[requestedPath]
         if (!!url && url !== null) {
+            // Preserve query parameters when redirecting
+            if (Object.keys(req.query).length > 0) {
+                const queryString = new URLSearchParams(req.query).toString()
+                url = `${url}${url.includes('?') ? '&' : '?'}${queryString}`
+            }
             res.redirect(url)
         }
         else {

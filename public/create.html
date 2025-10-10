@@ -23,7 +23,7 @@
                 if (!a.startsWith('/')) a = `/${a}`
                 if (!u.includes('://')) u = `https://${u}`
 
-                fetch(`./addUrl?a=${a}&u=${u}`, { method: 'POST' })
+                fetch(`./addUrl?a=${encodeURIComponent(a)}&u=${encodeURIComponent(u)}`, { method: 'POST' })
                     .then(response => response.text())
                     .then(text => {
                         // Create a mock event-like object to match go()'s expected input
